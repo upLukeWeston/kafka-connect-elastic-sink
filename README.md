@@ -25,7 +25,7 @@ The following instructions assume you are running on OpenShift and have Strimzi 
 #### Start a Kafka Connect cluster using KafkaConnectS2I
 - `kubectl apply -f deploy/kafka-connect-s2i.yaml` to create the cluster, which usually takes several minutes.
 
-#### Convert the certificates for elastic into JKS format
+#### Convert the certificates for elastic into JKS format (One time only)
  - find the secret <elastic_release_name>-es-http-certs-public in the elastic namespace
     - copy the contents of the ca and tls cert into two separate files: `ca.crt` and `tls.crt` respectively
  - run `keytool -importcert -file ca.crt -keystore truststore.jks -alias "alias" -deststoretype JKS -v -trustcacerts` and use the password `password`
@@ -37,10 +37,10 @@ The following instructions assume you are running on OpenShift and have Strimzi 
 
 #### Add the Elasticsearch sink connector to the cluster
 - `mkdir my-plugins`
-- option 1 - if you're changing the java code
+- option 1: if you're changing the java code
   - `mvn clean package` to build the connector JAR.
   - `cp target/kafka-connect-elastic-sink-*-jar-with-dependencies.jar my-plugins`
-- option 2. - if you're using the default code
+- option 2: if you're using the default code
   - download file from [here](https://ibm.github.io/event-streams/connectors/kc-sink-elastic/installation)
   - move the downloaded jar into `my-plugins`
 - `oc start-build kafka-connect-cluster-connect --from-dir ./my-plugins` to add the Elasticsearch sink connector to the Kafka Connect distributed worker cluster. 
