@@ -1,0 +1,26 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnectS2I
+metadata:
+  name: kafka-connect-cluster
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  bootstrapServers: 'my-cluster-kafka-bootstrap:9092'
+  config:
+    config.storage.replication.factor: 1
+    config.storage.topic: connect-cluster-configs
+    group.id: connect-cluster
+    offset.storage.replication.factor: 1
+    offset.storage.topic: connect-cluster-offsets
+    status.storage.replication.factor: 1
+    status.storage.topic: connect-cluster-status
+  externalConfiguration:
+    volumes:
+      - name: elastic-ca-certs
+        secret:
+          secretName: elastic-ca-certs
+      - name: elastic-certs-key
+        secret:
+          secretName: elastic-certs-key
+  replicas: 1
+  

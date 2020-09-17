@@ -1,0 +1,34 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  name: elastic-sink
+  labels:
+    strimzi.io/cluster: kafka-connect-cluster
+spec:
+  securityContext:
+    runAsUser: 0
+    fsGroup: 0
+    privileged: true
+  class: com.ibm.eventstreams.connect.elasticsink.ElasticSinkConnector
+  tasksMax: 1
+  config:
+    # kafka topics to read from
+    topics: 
+    # <elastic-service>.elastic:9200 e.g. 'elasticsearch-sample-es-http.elastic:9200' **WITHOUT HTTP/S**
+    es.connection: 
+    # elastic username
+    es.user.name: 
+    # elastic password
+    es.password: 
+    es.document.builder: com.ibm.eventstreams.connect.elasticsink.builders.JsonDocumentBuilder
+    es.index.builder: com.ibm.eventstreams.connect.elasticsink.builders.DefaultIndexBuilder
+    es.identifier.builder: com.ibm.eventstreams.connect.elasticsink.builders.DefaultIdentifierBuilder
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    es.tls.truststore.location: /opt/kafka/external-configuration/elastic-ca-certs/truststore.jks
+    es.tls.truststore.password: password
+    es.tls.keystore.location: /opt/kafka/external-configuration/elastic-certs-key/keystore.jks
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    es.tls.keystore.password: password
